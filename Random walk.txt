@@ -1,0 +1,110 @@
+#random walk game
+import pygame
+#installing the modules in pygame
+pygame.init()
+SCREEN=pygame.display.set_mode((718,428)) # setting the display
+pygame.display.set_caption("randomwalk")
+#background
+BACKGROUND_IMAGE = pygame.image.load("100.jpg")
+#obstecale
+#spiderman
+SPIDERMAN_IMAGE = pygame.image.load("spiderman.png")
+x=40
+y=50
+width=5
+height=5
+#VEL IS the number of pixels that we subtract from x value for every iteration of while loop
+vel=5
+# game variables
+obstcale_x=400
+obstcale_y=300
+obstcale_width=5
+obstcale_height=5
+obstcale_count=0
+coin_x=400
+coin_y=300
+coin_width=5
+coin_height=5
+coin_count=0
+score=0
+isJump=False
+jumpCount=10
+#animating
+obstcale=pygame.image.load("obstcale.png")
+coin=pygame.image.load("coin.jpg")
+def coin_animation():
+    global coin_x
+    global coin_count
+    pygame.display.blit(coin(coin_count),(coin_x, coin_y))
+    coin_count += 1
+    if coin_count +1 > 3:
+        coin_count=0
+    coin_x -= 10
+    if coin_x < -100:
+        coin_x = 1500
+def obstacles():
+    global obstcale_x
+    global obstcale_count
+    pygame.display.blit(obstcale(obstcale_count),(obstcale_x,obstcale_y))
+    obstcale_count += 1
+    if obstcale_count +1 > 3:
+        obstcale_count = 0
+
+def display_spiderman(x,y):
+    SCREEN.blit(SPIDERMAN_IMAGE, (x,y))
+#collision and showing score:
+def collision():
+    global coin_x
+    global score
+    spiderman_rect=pygame.rect(x, y, width, height)
+    coin_rect=pygame.rect(coin_x, coin_y, coin_width, coin_height)
+    if spiderman_rect.colliderect(coin_rect):
+        coin_x= 1500
+        score += 1
+clock = pygame.time.clock()
+
+run=True
+# the game loop
+while run:
+        SCREEN.fill((0,0,0))
+    # display the background image
+        SCREEN.blit(BACKGROUND_IMAGE, (0,0))
+        pygame.time.delay(50)
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+            #if you press exit you exit out of the while loop and pygame quits
+                run=False
+        keys=pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and x>vel:
+            x-=vel
+        if keys[pygame.K_RIGHT] and x<660-width-vel:
+            x+=vel
+        if not(isJump):
+            if keys[pygame.K_UP] and y>vel:
+                y-=vel
+            if keys[pygame.K_DOWN] and y<360-height-vel:
+                y+=vel
+        #if keys[pygame.K_SPACE]:
+         #   isJump= True
+        #else:
+
+            #if jumpCount >= -10:
+             #neg=1
+             #if jumpCount < 0:
+             #    neg = -1
+            # y -= (jumpCount ** 2) / 2 * neg
+            # jumpCount -= 1
+            # else:
+
+             #    isJump = False
+      #      jumpCount = 10
+            obstacles()
+            coin_animation()
+            collision()
+            display_spiderman(x, y)
+            #score()
+    #update the display after each iteration of the while loop
+            pygame.display.update()
+# Quit the program
+pygame.quit()
+quit()
